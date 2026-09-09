@@ -1,0 +1,6 @@
+id=hyperos_assistant_switcher
+name=HyperOS 助理切换
+version=v1.0.0
+versionCode=10000
+author=Systina12
+description=点击操作按钮，在超级小爱与系统默认数字助理之间切换长按电源键入口。支持 Magisk / SukiSU，开机恢复上次选择，不绑定助理应用。

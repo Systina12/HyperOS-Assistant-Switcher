@@ -1,0 +1,44 @@
+name: 模块检查
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: 安装测试工具
+        run: sudo apt-get update && sudo apt-get install -y busybox mksh shellcheck
+      - name: Shell 语法和静态检查
+        run: |
+          for script in module/*.sh; do dash -n "$script"; done
+          shellcheck -x --shell=sh module/*.sh
+      - name: dash 集成测试
+        env:
+          HAS_TEST_SHELL: dash
+        run: python -m unittest discover -s tests -v
+      - name: BusyBox ash 集成测试
+        env:
+          HAS_TEST_SHELL: busybox ash
+        run: python -m unittest discover -s tests -v
+      - name: mksh 集成测试
+        env:
+          HAS_TEST_SHELL: mksh
+        run: python -m unittest discover -s tests -v
+      - name: 构建安装包
+        run: python tools/build.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: HyperOS-Assistant-Switcher
+          path: dist/*
+          if-no-files-found: error
