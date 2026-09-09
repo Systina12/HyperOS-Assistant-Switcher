@@ -157,6 +157,7 @@ class ModuleTest(unittest.TestCase):
             HAS_REAL_SHELL_ARG=SHELL[1] if len(SHELL) > 1 else "",
             MOCK_MODULE=shell_path(self.module),
             MOCK_DB=shell_path(self.db),
+            MOCK_BIN=shell_path(self.bin),
             MOCK_SUPPRESS_BACKGROUND="1",
             # BusyBox standalone mode bypasses PATH mocks; use ordinary ash.
             ASH_STANDALONE="0",
@@ -170,6 +171,11 @@ class ModuleTest(unittest.TestCase):
         self.write(self.db / "boot", "1\n")
         self.mock("settings", SETTINGS_MOCK)
         self.mock("sleep", SLEEP_MOCK)
+        # BusyBox ash can implement sleep as a builtin, which bypasses PATH.
+        # Override only time in the private fixture; shipped scripts stay intact.
+        common = self.module / "common.sh"
+        self.write(common, common.read_text(encoding="utf-8") +
+                   '\nsleep() { "$MOCK_BIN/sleep" "$@"; }\n')
         self.mock("sh", SH_MOCK)
         self.mock("id", '#!/bin/sh\nprintf "%s\\n" "${MOCK_UID:-0}"\n')
         self.mock("getprop", r'''#!/bin/sh
