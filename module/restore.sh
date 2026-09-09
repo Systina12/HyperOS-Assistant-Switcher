@@ -15,7 +15,7 @@ done
 
 HAS_RESTORE_ATTEMPT=0
 while [ "$HAS_RESTORE_ATTEMPT" -lt 6 ]; do
-  has_lock || exit 1
+  has_lock 10 || exit 1
   trap 'has_unlock' 0
   trap 'exit 130' 2
   trap 'exit 143' 15

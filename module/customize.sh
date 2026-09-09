@@ -21,7 +21,7 @@ MODDIR=$MODPATH
 # shellcheck source=module/common.sh
 . "$MODPATH/common.sh"
 # Cancel an older pending uninstall under the same lock as its restore worker.
-has_lock || abort "$HAS_ERROR"
+has_lock 10 || abort "$HAS_ERROR"
 if ! rm -f "$HAS_RESTORE_HOOK" "$HAS_STATE_DIR/uninstalling" \
   "$HAS_STATE_DIR/restore.sh" "$HAS_STATE_DIR/common.sh"; then
   has_unlock

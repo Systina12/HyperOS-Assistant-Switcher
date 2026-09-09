@@ -78,7 +78,7 @@ case "$HAS_COMMAND" in
       off) HAS_NEW_GUARD=off ;;
       ''|*[!0-9]*|0*|?????*) has_usage; exit 2 ;;
       *)
-        [ "$2" -ge 60 ] && [ "$2" -le 3600 ] || { has_usage; exit 2; }
+        if [ "$2" -lt 60 ] || [ "$2" -gt 3600 ]; then has_usage; exit 2; fi
         HAS_NEW_GUARD=$2
         ;;
     esac

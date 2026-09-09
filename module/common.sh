@@ -93,8 +93,10 @@ has_load_guard() {
   esac
   # Reject leading zeroes so shell arithmetic never interprets octal values.
   case "$HAS_GUARD" in 0*) has_error 'guard 秒数不能包含前导零。'; return 1 ;; esac
-  [ "$HAS_GUARD" -ge 60 ] && [ "$HAS_GUARD" -le 3600 ] ||
+  if [ "$HAS_GUARD" -lt 60 ] || [ "$HAS_GUARD" -gt 3600 ]; then
     has_error 'guard 间隔必须在 60–3600 秒之间。'
+    return 1
+  fi
 }
 
 has_mode_label() {

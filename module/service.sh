@@ -29,7 +29,7 @@ has_service_wait() {
 
 has_reconcile() {
   HAS_RECONCILE_RC=1
-  has_lock || return 1
+  has_lock 10 || return 1
   if ! has_active; then has_unlock; return 1; fi
   HAS_ERROR=
   if has_load_mode && has_apply "$HAS_MODE"; then
@@ -47,7 +47,7 @@ has_reconcile() {
 }
 
 has_guard_interval() {
-  has_lock || { HAS_RECONCILE_RC=1; return 1; }
+  has_lock 10 || { HAS_RECONCILE_RC=1; return 1; }
   if has_active && has_load_guard; then
     if [ "$HAS_GUARD" != off ]; then
       HAS_INTERVAL=$HAS_GUARD
@@ -69,7 +69,7 @@ has_guard_interval() {
 HAS_BOOT_WAIT=0
 until [ "$(getprop sys.boot_completed)" = 1 ]; do
   if [ "$HAS_BOOT_WAIT" -ge 180 ]; then
-    if has_lock; then
+    if has_lock 10; then
       has_log '等待开机完成超时，未修改设置；系统启动后可运行 reapply。'
       has_unlock
     fi

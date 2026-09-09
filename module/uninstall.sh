@@ -3,7 +3,7 @@ MODDIR=${0%/*}
 [ "$MODDIR" != "$0" ] || MODDIR=.
 # shellcheck source=module/common.sh
 . "$MODDIR/common.sh"
-has_root && has_lock || exit 1
+has_root && has_lock 10 || exit 1
 trap 'has_unlock' 0
 trap 'exit 130' 2
 trap 'exit 143' 15
