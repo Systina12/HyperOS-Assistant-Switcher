@@ -60,4 +60,3 @@ sh /data/adb/modules/hyperos_assistant_switcher/control.sh restore
 
 
 
-仓库：[Systina12/HyperOS-Assistant-Switcher](https://github.com/Systina12/HyperOS-Assistant-Switcher)。许可证为 [MIT](LICENSE)。
